@@ -30,11 +30,11 @@ const options: ChartOptions<"pie"> = {
 };
 
   return (
-    <div className=" h-auto p-4 rounded-md">
+    <div className="h-auto p-4 rounded-md">
       <h2 className="text-lg font-semibold">
         Payment Volume by Ad Slot Category
       </h2>
-      <div className="w-full h-full bg-white mt-4" style={{ height: "300px" }}>
+      <div className="w-full h-full mt-4" style={{ height: "300px" }}>
         <Pie data={data} options={options} />
       </div>
     </div>

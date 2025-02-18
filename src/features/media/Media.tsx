@@ -1,14 +1,105 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Nav from "../../components/Nav";
+import TopNav from "../../components/TopNav";
 // import { useParams } from "react-router-dom";
 
 function Media() {
   // const { name } = useParams<{ name: string }>();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isNavOpen, setIsNavOpen] = useState(false);
+
+  const toggleNav = () => {
+    setIsNavOpen(!isNavOpen);
+  };
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth >= 1024) {
+        setIsNavOpen(true);
+      } else {
+        setIsNavOpen(false);
+      }
+    };
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
 
   const toggleModal = () => {
     setIsModalOpen(!isModalOpen);
   };
+
+  const [currentFilter, setCurrentFilter] = useState("All");
+  const [mediaItems] = useState([
+    {
+      type: "TV",
+      name: "Citizen",
+      description:
+        "Lorem ipsum dolor sit amet consectetur. Ornare semper urna pretium dui aliquam tempor et quam. Ridiculus pharetra pretium eu a tincidunt...",
+      imageUrl: "/images/citizen_logo.png",
+    },
+    {
+      type: "Radio",
+      name: "Radio Citizen",
+      description:
+        "Lorem ipsum dolor sit amet consectetur. Ornare semper urna pretium dui aliquam tempor et quam. Ridiculus pharetra pretium eu a tincidunt...",
+      imageUrl: "/images/citizen_logo.png",
+    },
+    {
+      type: "Newspaper",
+      name: "The Citizen",
+      description:
+        "Lorem ipsum dolor sit amet consectetur. Ornare semper urna pretium dui aliquam tempor et quam. Ridiculus pharetra pretium eu a tincidunt...",
+      imageUrl: "/images/citizen_logo.png",
+    },
+    {
+      type: "TV",
+      name: "Citizen",
+      description:
+        "Lorem ipsum dolor sit amet consectetur. Ornare semper urna pretium dui aliquam tempor et quam. Ridiculus pharetra pretium eu a tincidunt...",
+      imageUrl: "/images/citizen_logo.png",
+    },
+    {
+      type: "Podcast",
+      name: "Radio Citizen",
+      description:
+        "Lorem ipsum dolor sit amet consectetur. Ornare semper urna pretium dui aliquam tempor et quam. Ridiculus pharetra pretium eu a tincidunt...",
+      imageUrl: "/images/citizen_logo.png",
+    },
+    {
+      type: "Billboard",
+      name: "The Citizen",
+      description:
+        "Lorem ipsum dolor sit amet consectetur. Ornare semper urna pretium dui aliquam tempor et quam. Ridiculus pharetra pretium eu a tincidunt...",
+      imageUrl: "/images/citizen_logo.png",
+    },
+    {
+      type: "TV",
+      name: "Citizen",
+      description:
+        "Lorem ipsum dolor sit amet consectetur. Ornare semper urna pretium dui aliquam tempor et quam. Ridiculus pharetra pretium eu a tincidunt...",
+      imageUrl: "/images/citizen_logo.png",
+    },
+    {
+      type: "Podcast",
+      name: "Radio Citizen",
+      description:
+        "Lorem ipsum dolor sit amet consectetur. Ornare semper urna pretium dui aliquam tempor et quam. Ridiculus pharetra pretium eu a tincidunt...",
+      imageUrl: "/images/citizen_logo.png",
+    },
+    {
+      type: "Billboard",
+      name: "The Citizen",
+      description:
+        "Lorem ipsum dolor sit amet consectetur. Ornare semper urna pretium dui aliquam tempor et quam. Ridiculus pharetra pretium eu a tincidunt...",
+      imageUrl: "/images/citizen_logo.png",
+    },
+  ]);
+  const filteredMediaItems = mediaItems.filter((item) => {
+    return currentFilter === "All" || item.type === currentFilter;
+  });
 
   const Modal = () => (
     <div
@@ -69,7 +160,9 @@ function Media() {
             Station Type
           </label>
           <select className="w-full mt-1 p-2 border border-gray-300 rounded-lg focus:ring focus:ring-gray-300">
-            <option>Select a type</option>
+            <option>Television</option>
+            <option>Radio</option>
+            <option>NewsPaper</option>
           </select>
         </div>
 
@@ -101,34 +194,10 @@ function Media() {
 
   return (
     <>
-      <div className="flex h-full bg-gray-100">
-        <Nav />
+      <div className="flex h-screen bg-[#f5f1f1]">
+        <Nav isNavOpen={isNavOpen} />
         <main className="flex-1 w-1/2">
-          <div className="flex justify-end bg-white p-4 rounded-md">
-            <div className="text-xs">
-              <div className="flex items-center">
-                <i className="fas fa-bell text-gray-500 text-lg"></i>
-                <div className="ml-4 flex items-center">
-                  <img
-                    src="/images/icon_notification.png"
-                    className="w-4 h-4 ml-2 mr-4"
-                    alt="Notification Icon"
-                  />
-                  <img
-                    src="/images/dashboard_user.png"
-                    className="w-10 h-10 rounded-full"
-                    alt="User Profile"
-                  />
-                  <div className="ml-2">
-                    <p className="font-semibold flex items-center">
-                      Admin Admin
-                    </p>
-                    <p className="text-gray-500 text-xs">Admin</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+          <TopNav toggleNav={toggleNav} />
           <div className="p-6">
             <section className="flex justify-between items-center mb-6">
               <div>
@@ -136,7 +205,7 @@ function Media() {
                   <span className="text-sm text-gray-400"> Home /</span>{" "}
                   <span className="text-gray-800 text-sm">Media</span>
                 </p>
-                <h2 className="text-xl mt-4 font-bold">Media</h2>
+                <h2 className="text-3xl mt-4 font-bold">Media</h2>
               </div>
               <button
                 onClick={toggleModal}
@@ -149,24 +218,26 @@ function Media() {
 
             <section className="bg-white p-2 rounded-lg">
               <div className="flex justify-between space-x-4">
-                <button className="bg-red-200 text-[#F20519] px-6 text-xs py-1 w-60 rounded-md">
-                  All
-                </button>
-                <button className="bg-gray-200 text-gray-800 px-6 text-xs py-1 w-60 rounded-md">
-                  TV
-                </button>
-                <button className="bg-gray-200 text-gray-800 px-6 text-xs py-1 w-60 rounded-md">
-                  Radio
-                </button>
-                <button className="bg-gray-200 text-gray-800 px-6 text-xs py-1 w-60 rounded-md">
-                  Newspaper
-                </button>
-                <button className="bg-gray-200 text-gray-800 px-6 text-xs py-1 w-60 rounded-md">
-                  Podcast
-                </button>
-                <button className="bg-gray-200 text-gray-800 px-6 text-xs py-1 w-60 rounded-md">
-                  Billboard
-                </button>
+                {[
+                  "All",
+                  "TV",
+                  "Radio",
+                  "Newspaper",
+                  "Podcast",
+                  "Billboard",
+                ].map((filter) => (
+                  <button
+                    key={filter}
+                    onClick={() => setCurrentFilter(filter)}
+                    className={`px-6 text-xs py-1 w-60 rounded-md ${
+                      currentFilter === filter
+                        ? "bg-red-200 text-[#F20519]"
+                        : "bg-gray-200 text-gray-800"
+                    }`}
+                  >
+                    {filter}
+                  </button>
+                ))}
               </div>
             </section>
 
@@ -187,236 +258,35 @@ function Media() {
             </section>
 
             <section className="grid lg:grid-cols-5 md:grid-cols-4 gap-6 mt-6 bg-white p-4">
-              <div className="relative bg-white p-6 cursor-pointer rounded-lg border border-gray-200 shadow-lg hover:shadow-red-100">
-                <div className="flex flex-col items-center">
-                  <div className="relative flex items-center">
-                    <img
-                      src="/images/citizen_logo.png"
-                      alt="Media Logo"
-                      className="mt-1"
-                    />
+              {filteredMediaItems.map((item, index) => (
+                <div
+                  key={index}
+                  className="relative bg-white p-6 cursor-pointer rounded-lg border border-gray-200 shadow-lg hover:shadow-red-100"
+                >
+                  <div className="flex flex-col items-center">
+                    <span
+                      className={`absolute top-6 w-auto text-center right-10 bg-red-50 text-red-400 text-xs px-2 py-0.5 text-sm rounded-full transform translate-x-1/2 -translate-y-1/2`}
+                    >
+                      {item.type}
+                    </span>
+                    <div className="mt-4 text-center">
+                      <img
+                        src={item.imageUrl}
+                        alt="Media Logo"
+                        className="mt-1 mx-auto"
+                      />
+
+                      <h4 className="mt-4 font-semibold">{item.name}</h4>
+                      <p className="text-gray-600 text-xs mt-2 text-center">
+                        {item.description}
+                      </p>
+                      <button className="bg-red-200 text-red-400 text-xs w-full mt-4 py-1 rounded-md">
+                        View
+                      </button>
+                    </div>
                   </div>
-                  <span className="absolute top-6 w-12 text-center right-6 bg-red-50 text-red-400 text-xs px-2 py-0.5 text-sm rounded-full transform translate-x-1/2 -translate-y-1/2">
-                    TV
-                  </span>
-                  <h4 className="mt-4 font-semibold">Citizen</h4>
                 </div>
-                <p className="text-gray-600 text-xs mt-2 text-center">
-                  Lorem ipsum dolor sit amet consectetur. Ornare semper urna
-                  pretium dui aliquam tempor et quam. Ridiculus pharetra pretium
-                  eu a tincidunt...
-                </p>
-                <button className="bg-red-200 text-red-400 text-xs w-full mt-4 py-1 rounded-md">
-                  View
-                </button>
-              </div>
-              <div className="relative bg-white p-6 cursor-pointer rounded-lg border border-gray-200 shadow-lg hover:shadow-red-100">
-                <div className="flex flex-col items-center">
-                  <div className="relative flex items-center">
-                    <img
-                      src="/images/citizen_logo.png"
-                      alt="Media Logo"
-                      className="mt-1"
-                    />
-                  </div>
-                  <span className="absolute top-6 w-12 text-center right-6 bg-red-50 text-red-400 text-xs px-2 py-0.5 text-sm rounded-full transform translate-x-1/2 -translate-y-1/2">
-                    Radio
-                  </span>
-                  <h4 className="mt-4 font-semibold">Radio Citizen</h4>
-                </div>
-                <p className="text-gray-600 text-xs mt-2 text-center">
-                  Lorem ipsum dolor sit amet consectetur. Ornare semper urna
-                  pretium dui aliquam tempor et quam. Ridiculus pharetra pretium
-                  eu a tincidunt...
-                </p>
-                <button className="bg-red-200 text-red-400 text-xs w-full mt-4 py-1 rounded-md">
-                  View
-                </button>
-              </div>
-              <div className="relative bg-white p-6 cursor-pointer rounded-lg border border-gray-200 shadow-lg hover:shadow-red-100">
-                <div className="flex flex-col items-center">
-                  <div className="relative flex items-center">
-                    <img
-                      src="/images/citizen_logo.png"
-                      alt="Media Logo"
-                      className="mt-1"
-                    />
-                  </div>
-                  <span className="absolute top-6 w-12 text-center right-6 bg-red-50 text-red-400 text-xs px-2 py-0.5 text-sm rounded-full transform translate-x-1/2 -translate-y-1/2">
-                    TV
-                  </span>
-                  <h4 className="mt-4 font-semibold">Inooro</h4>
-                </div>
-                <p className="text-gray-600 text-xs mt-2 text-center">
-                  Lorem ipsum dolor sit amet consectetur. Ornare semper urna
-                  pretium dui aliquam tempor et quam. Ridiculus pharetra pretium
-                  eu a tincidunt...
-                </p>
-                <button className="bg-red-200 text-red-400 text-xs w-full mt-4 py-1 rounded-md">
-                  View
-                </button>
-              </div>
-              <div className="relative bg-white p-6 cursor-pointer rounded-lg border border-gray-200 shadow-lg hover:shadow-red-100">
-                <div className="flex flex-col items-center">
-                  <div className="relative flex items-center">
-                    <img
-                      src="/images/citizen_logo.png"
-                      alt="Media Logo"
-                      className="mt-1"
-                    />
-                  </div>
-                  <span className="absolute top-6 w-12 text-center right-6 bg-red-50 text-red-400 text-xs px-2 py-0.5 text-sm rounded-full transform translate-x-1/2 -translate-y-1/2">
-                    Paper
-                  </span>
-                  <h4 className="mt-4 font-semibold">The Citizen</h4>
-                </div>
-                <p className="text-gray-600 text-xs mt-2 text-center">
-                  Lorem ipsum dolor sit amet consectetur. Ornare semper urna
-                  pretium dui aliquam tempor et quam. Ridiculus pharetra pretium
-                  eu a tincidunt...
-                </p>
-                <button className="bg-red-200 text-red-400 text-xs w-full mt-4 py-1 rounded-md">
-                  View
-                </button>
-              </div>
-              <div className="relative bg-white p-6 cursor-pointer rounded-lg border border-gray-200 shadow-lg hover:shadow-red-100">
-                <div className="flex flex-col items-center">
-                  <div className="relative flex items-center">
-                    <img
-                      src="/images/citizen_logo.png"
-                      alt="Media Logo"
-                      className="mt-1"
-                    />
-                  </div>
-                  <span className="absolute top-6 w-12 text-center right-6 bg-red-50 text-red-400 text-xs px-2 py-0.5 text-sm rounded-full transform translate-x-1/2 -translate-y-1/2">
-                    TV
-                  </span>
-                  <h4 className="mt-4 font-semibold">Ramogi</h4>
-                </div>
-                <p className="text-gray-600 text-xs mt-2 text-center">
-                  Lorem ipsum dolor sit amet consectetur. Ornare semper urna
-                  pretium dui aliquam tempor et quam. Ridiculus pharetra pretium
-                  eu a tincidunt...
-                </p>
-                <button className="bg-red-200 text-red-400 text-xs w-full mt-4 py-1 rounded-md">
-                  View
-                </button>
-              </div>
-              <div className="relative bg-white p-6 cursor-pointer rounded-lg border border-gray-200 shadow-lg hover:shadow-red-100">
-                <div className="flex flex-col items-center">
-                  <div className="relative flex items-center">
-                    <img
-                      src="/images/citizen_logo.png"
-                      alt="Media Logo"
-                      className="mt-1"
-                    />
-                  </div>
-                  <span className="absolute top-6 w-12 text-center right-6 bg-red-50 text-red-400 text-xs px-2 py-0.5 text-sm rounded-full transform translate-x-1/2 -translate-y-1/2">
-                    TV
-                  </span>
-                  <h4 className="mt-4 font-semibold">Citizen</h4>
-                </div>
-                <p className="text-gray-600 text-xs mt-2 text-center">
-                  Lorem ipsum dolor sit amet consectetur. Ornare semper urna
-                  pretium dui aliquam tempor et quam. Ridiculus pharetra pretium
-                  eu a tincidunt...
-                </p>
-                <button className="bg-red-200 text-red-400 text-xs w-full mt-4 py-1 rounded-md">
-                  View
-                </button>
-              </div>
-              <div className="relative bg-white p-6 cursor-pointer rounded-lg border border-gray-200 shadow-lg hover:shadow-red-100">
-                <div className="flex flex-col items-center">
-                  <div className="relative flex items-center">
-                    <img
-                      src="/images/citizen_logo.png"
-                      alt="Media Logo"
-                      className="mt-1"
-                    />
-                  </div>
-                  <span className="absolute top-6 w-12 text-center right-6 bg-red-50 text-red-400 text-xs px-2 py-0.5 text-sm rounded-full transform translate-x-1/2 -translate-y-1/2">
-                    TV
-                  </span>
-                  <h4 className="mt-4 font-semibold">Citizen</h4>
-                </div>
-                <p className="text-gray-600 text-xs mt-2 text-center">
-                  Lorem ipsum dolor sit amet consectetur. Ornare semper urna
-                  pretium dui aliquam tempor et quam. Ridiculus pharetra pretium
-                  eu a tincidunt...
-                </p>
-                <button className="bg-red-200 text-red-400 text-xs w-full mt-4 py-1 rounded-md">
-                  View
-                </button>
-              </div>
-              <div className="relative bg-white p-6 cursor-pointer rounded-lg border border-gray-200 shadow-lg hover:shadow-red-100">
-                <div className="flex flex-col items-center">
-                  <div className="relative flex items-center">
-                    <img
-                      src="/images/citizen_logo.png"
-                      alt="Media Logo"
-                      className="mt-1"
-                    />
-                  </div>
-                  <span className="absolute top-6 w-12 text-center right-6 bg-red-50 text-red-400 text-xs px-2 py-0.5 text-sm rounded-full transform translate-x-1/2 -translate-y-1/2">
-                    TV
-                  </span>
-                  <h4 className="mt-4 font-semibold">Citizen</h4>
-                </div>
-                <p className="text-gray-600 text-xs mt-2 text-center">
-                  Lorem ipsum dolor sit amet consectetur. Ornare semper urna
-                  pretium dui aliquam tempor et quam. Ridiculus pharetra pretium
-                  eu a tincidunt...
-                </p>
-                <button className="bg-red-200 text-red-400 text-xs w-full mt-4 py-1 rounded-md">
-                  View
-                </button>
-              </div>
-              <div className="relative bg-white p-6 cursor-pointer rounded-lg border border-gray-200 shadow-lg hover:shadow-red-100">
-                <div className="flex flex-col items-center">
-                  <div className="relative flex items-center">
-                    <img
-                      src="/images/citizen_logo.png"
-                      alt="Media Logo"
-                      className="mt-1"
-                    />
-                  </div>
-                  <span className="absolute top-6 w-12 text-center right-6 bg-red-50 text-red-400 text-xs px-2 py-0.5 text-sm rounded-full transform translate-x-1/2 -translate-y-1/2">
-                    TV
-                  </span>
-                  <h4 className="mt-4 font-semibold">Citizen</h4>
-                </div>
-                <p className="text-gray-600 text-xs mt-2 text-center">
-                  Lorem ipsum dolor sit amet consectetur. Ornare semper urna
-                  pretium dui aliquam tempor et quam. Ridiculus pharetra pretium
-                  eu a tincidunt...
-                </p>
-                <button className="bg-red-200 text-red-400 text-xs w-full mt-4 py-1 rounded-md">
-                  View
-                </button>
-              </div>
-              <div className="relative bg-white p-6 cursor-pointer rounded-lg border border-gray-200 shadow-lg hover:shadow-red-100">
-                <div className="flex flex-col items-center">
-                  <div className="relative flex items-center">
-                    <img
-                      src="/images/citizen_logo.png"
-                      alt="Media Logo"
-                      className="mt-1"
-                    />
-                  </div>
-                  <span className="absolute top-6 w-12 text-center right-6 bg-red-50 text-red-400 text-xs px-2 py-0.5 text-sm rounded-full transform translate-x-1/2 -translate-y-1/2">
-                    TV
-                  </span>
-                  <h4 className="mt-4 font-semibold">Citizen</h4>
-                </div>
-                <p className="text-gray-600 text-xs mt-2 text-center">
-                  Lorem ipsum dolor sit amet consectetur. Ornare semper urna
-                  pretium dui aliquam tempor et quam. Ridiculus pharetra pretium
-                  eu a tincidunt...
-                </p>
-                <button className="bg-red-200 text-red-400 text-xs w-full mt-4 py-1 rounded-md">
-                  View
-                </button>
-              </div>
+              ))}
             </section>
           </div>
         </main>
