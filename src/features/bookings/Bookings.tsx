@@ -1,14 +1,37 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Nav from "../../components/Nav";
+import TopNav from "../../components/TopNav";
 // import { useParams } from "react-router-dom";
+
 
 function Bookings() {
   // const { name } = useParams<{ name: string }>();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isNavOpen, setIsNavOpen] = useState(false);
 
   const toggleModal = () => {
     setIsModalOpen(!isModalOpen);
   };
+
+  const toggleNav = () => {
+    setIsNavOpen(!isNavOpen);
+  };
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth >= 1024) {
+        setIsNavOpen(true);
+      } else {
+        setIsNavOpen(false);
+      }
+    };
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
 
   const Modal = () => (
     <div
@@ -99,36 +122,42 @@ function Bookings() {
     </div>
   );
 
+  const [currentFilter, setCurrentFilter] = useState("All");
+  const [bookings] = useState([
+    {
+      advertiserName: "Coca Cola",
+      slotTime: "Jan 10, 7:00AM",
+      adDuration: "30 Sec",
+      bookingStatus: "Confirmed",
+      paymentStatus: "Paid",
+    },
+    {
+      advertiserName: "Coca Cola",
+      slotTime: "Jan 10, 7:00AM",
+      adDuration: "30 Sec",
+      bookingStatus: "Rejected",
+      paymentStatus: "Unpaid",
+    },
+    {
+      advertiserName: "Coca Cola",
+      slotTime: "Jan 10, 7:00AM",
+      adDuration: "30 Sec",
+      bookingStatus: "Pending",
+      paymentStatus: "Paid",
+    },
+    // Add more bookings as needed
+  ]);
+  const filteredBookings = bookings.filter((booking) => {
+    if (currentFilter === "All") return true;
+    return booking.bookingStatus === currentFilter;
+  });
+
   return (
     <>
-      <div className="flex h-screen bg-gray-100">
-        <Nav />
+      <div className="flex h-screen bg-[#f5f1f1]">
+      <Nav isNavOpen={isNavOpen} />
         <main className="flex-1">
-          <div className="flex justify-end bg-white p-4 rounded-md">
-            <div className="text-xs">
-              <div className="flex items-center">
-                <i className="fas fa-bell text-gray-500 text-lg"></i>
-                <div className="ml-4 flex items-center">
-                  <img
-                    src="/images/icon_notification.png"
-                    className="w-4 h-4 ml-2 mr-4"
-                    alt="Notification Icon"
-                  />
-                  <img
-                    src="/images/dashboard_user.png"
-                    className="w-10 h-10 rounded-full"
-                    alt="User Profile"
-                  />
-                  <div className="ml-2">
-                    <p className="font-semibold flex items-center">
-                      Admin Admin
-                    </p>
-                    <p className="text-gray-500 text-xs">Admin</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+        <TopNav toggleNav={toggleNav} />
           <div className="p-6">
             <section className="flex justify-between items-center mb-6">
               <div>
@@ -136,24 +165,27 @@ function Bookings() {
                   <span className="text-sm text-gray-400"> Home /</span>{" "}
                   <span className="text-gray-800 text-sm">Bookings</span>
                 </p>
-                <h2 className="text-xl mt-4 font-bold">Bookings</h2>
+                <h2 className="text-3xl mt-4 font-bold">Bookings</h2>
               </div>
             </section>
 
             <section className="bg-white p-2 rounded-lg">
               <div className="flex justify-between space-x-4">
-                <button className="bg-red-200 text-[#F20519] px-6 text-xs py-1 w-60 rounded-md">
-                  All Request
-                </button>
-                <button className="bg-gray-200 text-gray-800 px-6 text-xs py-1 w-60 rounded-md">
-                  Pending Requests
-                </button>
-                <button className="bg-gray-200 text-gray-800 px-6 text-xs py-1 w-60 rounded-md">
-                  Confirmed Bookings
-                </button>
-                <button className="bg-gray-200 text-gray-800 px-6 text-xs py-1 w-60 rounded-md">
-                  Rejected Bookings
-                </button>
+                {["All", "Pending", "Confirmed", "Rejected"].map((filter) => {
+                  const isActive = currentFilter === filter;
+                  const bgColor = isActive ? "bg-red-200" : "bg-gray-200";
+                  const textColor = isActive ? "text-red-500" : "text-gray-800";
+
+                  return (
+                    <button
+                      key={filter}
+                      onClick={() => setCurrentFilter(filter)}
+                      className={`${bgColor} ${textColor} px-6 text-xs py-1 w-full rounded-md`}
+                    >
+                      {filter} Requests
+                    </button>
+                  );
+                })}
               </div>
             </section>
 
@@ -195,57 +227,37 @@ function Bookings() {
                   </tr>
                 </thead>
                 <tbody className="text-xs">
-                  <tr className="border-b">
-                    <td className="p-3 flex items-center space-x-2">
-                      <img
-                        src="/images/coca_cola.png"
-                        alt="Coca Cola logo"
-                        className="w-6 h-6"
-                      />
-                      <span>Coca Cola</span>
-                    </td>
-                    <td className="p-3">Jan 10, 7:00AM</td>
-                    <td className="p-3">30 Sec</td>
-                    <td className="p-3 text-green-500">Confirmed</td>
-                    <td className="p-3 text-green-500">Paid</td>
-                    <td className="p-3">
-                      <i className="bx bx-dots-vertical-rounded text-2xl cursor-pointer"></i>
-                    </td>
-                  </tr>
-                  <tr className="border-b">
-                    <td className="p-3 flex items-center space-x-2">
-                      <img
-                        src="/images/coca_cola.png"
-                        alt="Coca Cola logo"
-                        className="w-6 h-6"
-                      />
-                      <span>Coca Cola</span>
-                    </td>
-                    <td className="p-3">Jan 10, 7:00AM</td>
-                    <td className="p-3">30 Sec</td>
-                    <td className="p-3 text-red-500">Rejected</td>
-                    <td className="p-3 text-red-500">Unpaid</td>
-                    <td className="p-3">
-                      <i className="bx bx-dots-vertical-rounded text-2xl cursor-pointer"></i>
-                    </td>
-                  </tr>
-                  <tr className="border-b">
-                    <td className="p-3 flex items-center space-x-2">
-                      <img
-                        src="/images/coca_cola.png"
-                        alt="Coca Cola logo"
-                        className="w-6 h-6"
-                      />
-                      <span>Coca Cola</span>
-                    </td>
-                    <td className="p-3">Jan 10, 7:00AM</td>
-                    <td className="p-3">30 Sec</td>
-                    <td className="p-3 text-yellow-500">Pending</td>
-                    <td className="p-3 text-green-500">Paid</td>
-                    <td className="p-3">
-                      <i className="bx bx-dots-vertical-rounded text-2xl cursor-pointer"></i>
-                    </td>
-                  </tr>
+                  {filteredBookings.map((booking, index) => (
+                    <tr key={index} className="border-b">
+                      <td className="p-3 flex items-center space-x-2">
+                        <img
+                          src="/images/coca_cola.png"
+                          alt="Coca Cola logo"
+                          className="w-6 h-6"
+                        />
+                        <span>{booking.advertiserName}</span>
+                      </td>
+                      <td className="p-3">{booking.slotTime}</td>
+                      <td className="p-3">{booking.adDuration}</td>
+                      <td
+                        className={`p-3 text-${
+                          booking.bookingStatus === "Confirmed"
+                            ? "green"
+                            : booking.bookingStatus === "Rejected"
+                            ? "red"
+                            : "yellow"
+                        }-500`}
+                      >
+                        {booking.bookingStatus}
+                      </td>
+                      <td className="p-3 text-green-500">
+                        {booking.paymentStatus}
+                      </td>
+                      <td className="p-3">
+                        <i className="bx bx-dots-vertical-rounded text-2xl cursor-pointer"></i>
+                      </td>
+                    </tr>
+                  ))}
                 </tbody>
               </table>
 
