@@ -31,7 +31,7 @@ const PaymentsChart = () => {
           250000, 260000,
         ],
         borderColor: "rgb(255, 99, 132)",
-        backgroundColor: "", // This will be set in useEffect
+        backgroundColor: "", 
         fill: true,
         tension: 0.4,
       },
